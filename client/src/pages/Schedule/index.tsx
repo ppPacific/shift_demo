@@ -36,21 +36,38 @@ export const SchedulePage = () => {
           <div
             key={`${idx}-${mth}`}
             className={
-              "rounded-lg border border-[1px] border-black-100 mr-3 mb-3"
+              "rounded-lg border border-[1px] border-black-100 w-full min-w-[360px] mr-3 mb-3"
             }
           >
             <div
               className={
                 //date header
-                "font-semibold text-md rounded-t-lg bg-gray-200 w-full min-w-[300px] min-h-10 flex items-center"
+                "font-semibold text-md rounded-t-lg bg-gray-200 w-full min-w-[360px] min-h-10 flex items-center flex flex-row"
               }
             >
+              <div className={"flex items-center pl-4"}>
+                <input
+                  type={"checkbox"}
+                  value={mth}
+                  //onChange={checkboxHandler}
+                />
+              </div>
               {DateTime.fromFormat(mth, "yyyy-MM").toFormat("MMMM yyyy")}
               {groupedData && (
                 <span className={"text-sm font-normal"}>
                   ({groupedData[mth]?.length} held shifts)
                 </span>
               )}
+              <button
+                className={
+                  "px-3 h-6 rounded border border-1 border-green-500 bg-green-500 text-white flex items-center text-sm font-semibold"
+                }
+                onClick={() => {
+                  console.log("confirm");
+                }}
+              >
+                Confirm
+              </button>
             </div>
             {groupedData[mth]?.map((mthItem, idx) => {
               return (

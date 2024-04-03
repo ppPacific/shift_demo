@@ -20,8 +20,6 @@ const Colors = {
 } as const;
 
 export const Shift: FC<IShift> = ({ ...props }) => {
-  //const {start,end, id,code,en_fullName,ch_fullName,type,status} = props;
-
   const checkboxHandler = (event: ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.checked);
   };
