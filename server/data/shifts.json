@@ -1,0 +1,100 @@
+{
+  "shifts": [
+    {
+      "s_id": "s_0001",
+      "code": 66,
+      "en_fullName": "Wong Ka Tung",
+      "ch_fullName": "王嘉彤",
+      "slot": {
+        "start": "2024-01-03T14:00:00",
+        "end": "2024-01-03T16:00:00"
+      },
+      "type": "ST",
+      "status": "pending"
+    },
+    {
+      "s_id": "s_0002",
+      "code": 66,
+      "en_fullName": "Wong Ka Tung",
+      "ch_fullName": "王嘉彤",
+      "slot": {
+        "start": "2024-02-03T14:00:00",
+        "end": "2024-02-03T16:00:00"
+      },
+      "type": "EN",
+      "status": "pending"
+    },
+    {
+      "s_id": "s_0003",
+      "code": 66,
+      "en_fullName": "Wong Ka Tung",
+      "ch_fullName": "王嘉彤",
+      "slot": {
+        "start": "2024-03-03T15:00:00",
+        "end": "2024-03-03T16:00:00"
+      },
+      "type": "EN",
+      "status": "pending"
+    },
+    {
+      "s_id": "s_0004",
+      "code": 36,
+      "en_fullName": "Chan Tai Men",
+      "ch_fullName": "陳大文",
+      "slot": {
+        "start": "2023-12-30T14:00:00",
+        "end": "2023-12-30T16:00:00"
+      },
+      "type": "ST",
+      "status": "pending"
+    },
+    {
+      "s_id": "s_0005",
+      "code": 36,
+      "en_fullName": "Chan Tai Men",
+      "ch_fullName": "陳大文",
+      "slot": {
+        "start": "2023-12-28T14:00:00",
+        "end": "2023-12-28T16:00:00"
+      },
+      "type": "ST",
+      "status": "declined"
+    },
+    {
+      "s_id": "s_0006",
+      "code": 36,
+      "en_fullName": "Chan Tai Men",
+      "ch_fullName": "陳大文",
+      "slot": {
+        "start": "2023-12-29T14:00:00",
+        "end": "2023-12-29T16:00:00"
+      },
+      "type": "ST",
+      "status": "declined"
+    },
+    {
+      "s_id": "s_0007",
+      "code": 86,
+      "en_fullName": "Lau Tsz Wai Sharon",
+      "ch_fullName": "劉芷瑋",
+      "slot": {
+        "start": "2023-12-28T14:00:00",
+        "end": "2023-12-28T16:00:00"
+      },
+      "type": "ST",
+      "status": "confirmed"
+    },
+    {
+      "s_id": "s_0008",
+      "code": 86,
+      "en_fullName": "Lau Tsz Wai Sharon",
+      "ch_fullName": "劉芷瑋",
+      "slot": {
+        "start": "2023-12-29T14:00:00",
+        "end": "2023-12-29T16:00:00"
+      },
+      "type": "ST",
+      "status": "pending"
+    }
+  ]
+}
