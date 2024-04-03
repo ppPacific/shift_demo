@@ -36,32 +36,38 @@ export const SchedulePage = () => {
           <div
             key={`${idx}-${mth}`}
             className={
-              "rounded-lg border border-[1px] border-black-100 w-full min-w-[360px] mr-3 mb-3"
+              "rounded-lg border border-[1px] border-black-100 min-w-[360px] mr-3 mb-3"
             }
           >
             <div
               className={
-                //date header
-                "font-semibold text-md rounded-t-lg bg-gray-200 w-full min-w-[360px] min-h-10 flex items-center flex flex-row"
+                "flex flex-row justify-between items-center bg-gray-200 pr-2"
               }
             >
-              <div className={"flex items-center pl-4"}>
-                <input
-                  type={"checkbox"}
-                  value={mth}
-                  //onChange={checkboxHandler}
-                />
+              <div
+                className={
+                  "font-semibold text-md rounded-t-lg w-full min-h-10 flex items-center flex-row"
+                }
+              >
+                <div className={"flex items-center pl-4 pr-2"}>
+                  <input
+                    type={"checkbox"}
+                    value={mth}
+                    //onChange={checkboxHandler}
+                  />
+                </div>
+                {DateTime.fromFormat(mth, "yyyy-MM").toFormat("MMMM yyyy")}
+                {groupedData && (
+                  <span className={"text-sm font-normal"}>
+                    ({groupedData[mth]?.length} held shifts)
+                  </span>
+                )}
               </div>
-              {DateTime.fromFormat(mth, "yyyy-MM").toFormat("MMMM yyyy")}
-              {groupedData && (
-                <span className={"text-sm font-normal"}>
-                  ({groupedData[mth]?.length} held shifts)
-                </span>
-              )}
               <button
                 className={
                   "px-3 h-6 rounded border border-1 border-green-500 bg-green-500 text-white flex items-center text-sm font-semibold"
                 }
+                //disabled={true}
                 onClick={() => {
                   console.log("confirm");
                 }}
@@ -72,10 +78,21 @@ export const SchedulePage = () => {
             {groupedData[mth]?.map((mthItem, idx) => {
               return (
                 <div>
-                  {/*{(groupedData[mth].length === 1 ||*/}
-                  {/*  mthItem.slot.start.substring(8, 10) !==*/}
-                  {/*    groupedData[mth][idx + 1].slot.start.substring(8, 10)) &&*/}
-                  {/*  mthItem.slot.start.substring(8, 10)}*/}
+                  <div className={"bg-gray-100 flex items-center"}>
+                    {
+                      //groupedData[mth].length === 1 && (
+                      <div className={"pl-2 text-xs font-semibold"}>
+                        {DateTime.fromFormat(
+                          mthItem.slot.start,
+                          "yyyy-MM-dd'T'HH:mm:ss",
+                        ).toFormat("d MMMM")}
+                      </div>
+                      //)
+                      // mthItem.slot.start.substring(8, 10) !==
+                      //   groupedData[mth][idx + 1].slot.start.substring(8, 10)) &&
+                      // mthItem.slot.start.substring(8, 10)
+                    }
+                  </div>
                   <Shift
                     key={`k-${idx}-${mthItem.s_id}`}
                     s_id={mthItem.s_id}
