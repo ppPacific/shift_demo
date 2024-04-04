@@ -34,10 +34,7 @@ const Colors = {
 } as const;
 
 export const Shift: FC<ICheckShift> = ({ ...props }) => {
-  // const [value, setValue] = useState<string>("confirmed");
-
   const record = props.records.filter((item) => item.id === props.s_id);
-  //console.log(record);
 
   return (
     <div className={"flex flex-row border-t-[1px] "}>
@@ -87,19 +84,19 @@ export const Shift: FC<ICheckShift> = ({ ...props }) => {
           <div className={"flex flex-row gap-x-2"}>
             <button
               className={
-                "px-4 h-6 rounded-md flex items-center bg-white font-semibold text-green-600 border border-[1px] border-green-600 has-[:checked]:bg-green-500 has-[:checked]:text-white has-[:checked]:ring-green-500"
-              }
-              onClick={() => props.onHandleStatus(props.s_id, "confirmed")}
-            >
-              Confirm
-            </button>
-            <button
-              className={
                 "px-4 h-6 rounded-md flex items-center bg-white font-semibold text-red-600 border border-[1px] border-red-600 has-[:checked]:bg-red-500 has-[:checked]:text-white has-[:checked]:ring-red-500"
               }
               onClick={() => props.onHandleStatus(props.s_id, "declined")}
             >
               Decline
+            </button>
+            <button
+              className={
+                "px-4 h-6 rounded-md flex items-center bg-white font-semibold text-green-600 border border-[1px] border-green-600 has-[:checked]:bg-green-500 has-[:checked]:text-white has-[:checked]:ring-green-500"
+              }
+              onClick={() => props.onHandleStatus(props.s_id, "confirmed")}
+            >
+              Confirm
             </button>
           </div>
         ) : (

@@ -24,7 +24,7 @@ export const SchedulePage = () => {
       setRecords(sortedRec);
     }
   }, [sortedShifts]);
-  console.log(records);
+
   const handleCheckboxChange = (recordId: string) => {
     setSelectedRecords((prevSelectedRecords) => {
       if (prevSelectedRecords.includes(recordId)) {
@@ -33,14 +33,6 @@ export const SchedulePage = () => {
         return [...prevSelectedRecords, recordId];
       }
     });
-  };
-  console.log(selectedRecords);
-  const handleStatus = (recordId: string, status: string) => {
-    setRecords((prevRecords) =>
-      prevRecords.map((record) =>
-        record.id === recordId ? { ...record, status: status } : record,
-      ),
-    );
   };
 
   const handleConfirmSelected = () => {
@@ -53,6 +45,15 @@ export const SchedulePage = () => {
     );
   };
 
+  const handleStatus = (recordId: string, status: string) => {
+    setRecords((prevRecords) =>
+      prevRecords.map((record) =>
+        record.id === recordId ? { ...record, status: status } : record,
+      ),
+    );
+    handleConfirmSelected();
+  };
+
   const handleConfirmAll = () => {
     setRecords((prevRecords) =>
       prevRecords.map((record) =>
@@ -61,6 +62,7 @@ export const SchedulePage = () => {
           : record,
       ),
     );
+    handleConfirmSelected();
   };
 
   let groupedData = sortedShifts
@@ -90,7 +92,7 @@ export const SchedulePage = () => {
           <div
             key={`${idx}-${mth}`}
             className={
-              "rounded-lg border border-[1px] border-black-100 min-w-[360px] min-h-[100vh] mr-3 mb-3"
+              "rounded-lg border border-[1px] border-black-100 min-w-[360px] min-h-[100vh] mr-3 mb-3 overflow-x-auto"
             }
           >
             <div
