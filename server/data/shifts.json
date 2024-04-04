@@ -57,7 +57,7 @@
         "start": "2023-12-28T14:00:00",
         "end": "2023-12-28T16:00:00"
       },
-      "type": "ST",
+      "type": "EN",
       "status": "declined"
     },
     {
@@ -81,7 +81,7 @@
         "start": "2023-12-28T14:00:00",
         "end": "2023-12-28T16:00:00"
       },
-      "type": "ST",
+      "type": "EN",
       "status": "confirmed"
     },
     {
@@ -92,6 +92,18 @@
       "slot": {
         "start": "2023-12-29T22:00:00",
         "end": "2023-12-29T23:00:00"
+      },
+      "type": "ST",
+      "status": "pending"
+    },
+    {
+      "s_id": "s_0009",
+      "code": 86,
+      "en_fullName": "Lau Tsz Wai Sharon",
+      "ch_fullName": "劉芷瑋",
+      "slot": {
+        "start": "2024-01-03T09:00:00",
+        "end": "2024-01-03T11:00:00"
       },
       "type": "ST",
       "status": "pending"
