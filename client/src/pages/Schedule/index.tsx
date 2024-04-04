@@ -68,7 +68,9 @@ export const SchedulePage = () => {
   let groupedData = sortedShifts
     .filter(
       (item) =>
-        item.en_fullName.includes(searchTerm.trim()) ||
+        item.en_fullName
+          .toLowerCase()
+          .includes(searchTerm.trim().toLowerCase()) ||
         item.ch_fullName.includes(searchTerm.trim()),
     )
     .reduce((result: { [month: string]: Array<IShift> }, item) => {
