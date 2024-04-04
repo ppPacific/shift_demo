@@ -1,6 +1,6 @@
-import { ChangeEvent, FC } from "react";
-import { log } from "util";
+import { ChangeEvent, ChangeEventHandler, FC, useState } from "react";
 import { DateTime } from "luxon";
+import { IRecord } from "../pages/Schedule";
 interface ISlot {
   start: string;
   end: string;
@@ -14,28 +14,41 @@ export interface IShift {
   status: string;
   slot: ISlot;
 }
+export interface ICheckShift {
+  s_id: string;
+  code: number;
+  en_fullName: string;
+  ch_fullName: string;
+  type: string;
+  status: string;
+  slot: ISlot;
+  checked: boolean;
+  onChangeCheck: (id: string) => void;
+  onHandleStatus: (id: string, status: string) => void;
+  records: Array<IRecord>;
+}
 
 const Colors = {
   ST: "#4df5b9",
   EN: "#f54dce",
 } as const;
 
-export const Shift: FC<IShift> = ({ ...props }) => {
-  const checkboxHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.checked);
-  };
+export const Shift: FC<ICheckShift> = ({ ...props }) => {
+  // const [value, setValue] = useState<string>("confirmed");
+
+  const record = props.records.filter((item) => item.id === props.s_id);
+  //console.log(record);
+
   return (
     <div className={"flex flex-row border-t-[1px] "}>
       <div className={"flex items-center pl-4"}>
         <input
           type={"checkbox"}
           value={props.s_id}
-          onChange={checkboxHandler}
-          disabled={props.status === "declined" || props.status === "confirmed"}
+          onChange={() => props.onChangeCheck(props.s_id)}
         />
       </div>
       <div className={"flex flex-col text-xs text-black gap-y-2 p-4"}>
-        <div>{props.slot.start}</div>
         <div>
           {DateTime.fromFormat(
             props.slot.start,
@@ -70,56 +83,27 @@ export const Shift: FC<IShift> = ({ ...props }) => {
           >
             {props.status.charAt(0).toUpperCase() + props.status.slice(1)}
           </div>
-        ) : (
-          <div className={"flex flex-row gap-2"}>
-            <label
-              className={
-                "px-4 h-6 rounded-md flex items-center bg-white font-semibold text-red-600 border border-[1px] border-red-600 has-[:checked]:bg-red-500 has-[:checked]:text-white has-[:checked]:ring-red-500"
-              }
-            >
-              <input
-                type="radio"
-                name="statusConfirm"
-                value="decline"
-                className="hidden"
-              />
-              Decline
-            </label>
-            <label
+        ) : record[0] && record[0].status === "pending" ? (
+          <div className={"flex flex-row gap-x-2"}>
+            <button
               className={
                 "px-4 h-6 rounded-md flex items-center bg-white font-semibold text-green-600 border border-[1px] border-green-600 has-[:checked]:bg-green-500 has-[:checked]:text-white has-[:checked]:ring-green-500"
               }
+              onClick={() => props.onHandleStatus(props.s_id, "confirmed")}
             >
-              <input
-                type="radio"
-                name="statusConfirm"
-                value="confirm"
-                className="hidden"
-                defaultChecked
-              />
               Confirm
-            </label>
-            {/*<button*/}
-            {/*  className={*/}
-            {/*    "px-3 h-6 rounded border border-1 border-red-600 text-red-600"*/}
-            {/*  }*/}
-            {/*  onClick={() => {*/}
-            {/*    console.log("decline");*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  Decline*/}
-            {/*</button>*/}
-            {/*<button*/}
-            {/*  className={*/}
-            {/*    "px-3 h-6 rounded border border-1 border-green-500 bg-green-500 text-white"*/}
-            {/*  }*/}
-            {/*  onClick={() => {*/}
-            {/*    console.log("confirm");*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  Confirm*/}
-            {/*</button>*/}
+            </button>
+            <button
+              className={
+                "px-4 h-6 rounded-md flex items-center bg-white font-semibold text-red-600 border border-[1px] border-red-600 has-[:checked]:bg-red-500 has-[:checked]:text-white has-[:checked]:ring-red-500"
+              }
+              onClick={() => props.onHandleStatus(props.s_id, "declined")}
+            >
+              Decline
+            </button>
           </div>
+        ) : (
+          "Status updated!"
         )}
       </div>
     </div>

@@ -1,13 +1,67 @@
 import { useData } from "../../hooks/useData";
 import { DateTime } from "luxon";
 import { IShift, Shift } from "../../components/Shift";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../context/searchContext";
 
+export interface IRecord {
+  id: string;
+  status: string;
+}
 export const SchedulePage = () => {
   const { sortedShifts } = useData();
-  //const { apiData, setApiData } = useStore();
   const { searchTerm } = useContext(SearchContext);
+  const [records, setRecords] = useState<IRecord[]>([]);
+  const [selectedRecords, setSelectedRecords] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (sortedShifts) {
+      let sortedRec = sortedShifts
+        .filter((item) => item.status === "pending")
+        .map((item) => {
+          return { id: item.s_id, status: item.status };
+        });
+      setRecords(sortedRec);
+    }
+  }, [sortedShifts]);
+  console.log(records);
+  const handleCheckboxChange = (recordId: string) => {
+    setSelectedRecords((prevSelectedRecords) => {
+      if (prevSelectedRecords.includes(recordId)) {
+        return prevSelectedRecords.filter((id) => id !== recordId);
+      } else {
+        return [...prevSelectedRecords, recordId];
+      }
+    });
+  };
+  console.log(selectedRecords);
+  const handleStatus = (recordId: string, status: string) => {
+    setRecords((prevRecords) =>
+      prevRecords.map((record) =>
+        record.id === recordId ? { ...record, status: status } : record,
+      ),
+    );
+  };
+
+  const handleConfirmSelected = () => {
+    setRecords((prevRecords) =>
+      prevRecords.map((record) =>
+        selectedRecords.includes(record.id)
+          ? { ...record, status: record.status }
+          : record,
+      ),
+    );
+  };
+
+  const handleConfirmAll = () => {
+    setRecords((prevRecords) =>
+      prevRecords.map((record) =>
+        selectedRecords.includes(record.id)
+          ? { ...record, status: record.status }
+          : record,
+      ),
+    );
+  };
 
   let groupedData = sortedShifts
     .filter(
@@ -36,25 +90,21 @@ export const SchedulePage = () => {
           <div
             key={`${idx}-${mth}`}
             className={
-              "rounded-lg border border-[1px] border-black-100 min-w-[360px] mr-3 mb-3"
+              "rounded-lg border border-[1px] border-black-100 min-w-[360px] min-h-[100vh] mr-3 mb-3"
             }
           >
             <div
               className={
-                "flex flex-row justify-between items-center bg-gray-200 pr-2"
+                "flex flex-row justify-between items-center rounded-t-lg bg-gray-200 pr-2"
               }
             >
               <div
                 className={
-                  "font-semibold text-md rounded-t-lg w-full min-h-10 flex items-center flex-row"
+                  "font-semibold text-md w-full min-h-10 flex items-center flex-row"
                 }
               >
                 <div className={"flex items-center pl-4 pr-2"}>
-                  <input
-                    type={"checkbox"}
-                    value={mth}
-                    //onChange={checkboxHandler}
-                  />
+                  <input type={"checkbox"} value={mth} onChange={() => {}} />
                 </div>
                 {DateTime.fromFormat(mth, "yyyy-MM").toFormat("MMMM yyyy")}
                 {groupedData && (
@@ -67,10 +117,7 @@ export const SchedulePage = () => {
                 className={
                   "px-3 h-6 rounded border border-1 border-green-500 bg-green-500 text-white flex items-center text-sm font-semibold"
                 }
-                //disabled={true}
-                onClick={() => {
-                  console.log("confirm");
-                }}
+                onClick={handleConfirmAll}
               >
                 Confirm
               </button>
@@ -80,17 +127,12 @@ export const SchedulePage = () => {
                 <div>
                   <div className={"bg-gray-100 flex items-center"}>
                     {
-                      //groupedData[mth].length === 1 && (
                       <div className={"pl-2 text-xs font-semibold"}>
                         {DateTime.fromFormat(
                           mthItem.slot.start,
                           "yyyy-MM-dd'T'HH:mm:ss",
                         ).toFormat("d MMMM")}
                       </div>
-                      //)
-                      // mthItem.slot.start.substring(8, 10) !==
-                      //   groupedData[mth][idx + 1].slot.start.substring(8, 10)) &&
-                      // mthItem.slot.start.substring(8, 10)
                     }
                   </div>
                   <Shift
@@ -102,6 +144,10 @@ export const SchedulePage = () => {
                     type={mthItem.type}
                     status={mthItem.status}
                     slot={mthItem.slot}
+                    checked={selectedRecords.includes(mthItem.s_id)}
+                    onChangeCheck={handleCheckboxChange}
+                    onHandleStatus={handleStatus}
+                    records={records}
                   />
                 </div>
               );
