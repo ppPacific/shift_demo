@@ -4,24 +4,16 @@ import { IShift, Shift } from "../../components/Shift";
 import { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../context/searchContext";
 
-export interface IRecord {
-  id: string;
-  status: string;
-}
 export const SchedulePage = () => {
   const { sortedShifts } = useData();
   const { searchTerm } = useContext(SearchContext);
-  const [records, setRecords] = useState<IRecord[]>([]);
+  const [stateShifts, setStateShifts] = useState<Array<IShift>>(sortedShifts);
   const [selectedRecords, setSelectedRecords] = useState<string[]>([]);
-
+  const [statusUpdates, setStatusUpdates] = useState<Array<IShift>>([]);
   useEffect(() => {
     if (sortedShifts) {
-      let sortedRec = sortedShifts
-        .filter((item) => item.status === "pending")
-        .map((item) => {
-          return { id: item.s_id, status: item.status };
-        });
-      setRecords(sortedRec);
+      setStateShifts(sortedShifts);
+      setStatusUpdates(sortedShifts);
     }
   }, [sortedShifts]);
 
@@ -35,37 +27,32 @@ export const SchedulePage = () => {
     });
   };
 
-  const handleConfirmSelected = () => {
-    setRecords((prevRecords) =>
+  const handleStatus = (recordId: string, status: string) => {
+    setStatusUpdates((prevRecords) =>
       prevRecords.map((record) =>
-        selectedRecords.includes(record.id)
-          ? { ...record, status: record.status }
+        record.s_id === recordId && selectedRecords.includes(recordId)
+          ? { ...record, status: status }
           : record,
       ),
     );
-  };
-
-  const handleStatus = (recordId: string, status: string) => {
-    setRecords((prevRecords) =>
-      prevRecords.map((record) =>
-        record.id === recordId ? { ...record, status: status } : record,
-      ),
-    );
-    handleConfirmSelected();
   };
 
   const handleConfirmAll = () => {
-    setRecords((prevRecords) =>
-      prevRecords.map((record) =>
-        selectedRecords.includes(record.id)
-          ? { ...record, status: record.status }
-          : record,
-      ),
+    setStateShifts((prevRecords) =>
+      prevRecords.map((record) => {
+        const statusUpdate = statusUpdates.find(
+          (update) => update.s_id === record.s_id,
+        );
+        return statusUpdate
+          ? { ...record, status: statusUpdate.status }
+          : record;
+      }),
     );
-    handleConfirmSelected();
+
+    setSelectedRecords([]);
   };
 
-  let groupedData = sortedShifts
+  let groupedData = stateShifts
     .filter(
       (item) =>
         item.en_fullName
@@ -92,7 +79,7 @@ export const SchedulePage = () => {
       {sortedMonths?.map((mth, idx) => {
         return (
           <div
-            key={`${idx}-${mth}`}
+            key={`k${idx}-${mth}`}
             className={
               "rounded-lg border border-[1px] border-black-100 min-w-[360px] min-h-[100vh] mr-3 mb-3 overflow-x-auto"
             }
@@ -151,7 +138,7 @@ export const SchedulePage = () => {
                     checked={selectedRecords.includes(mthItem.s_id)}
                     onChangeCheck={handleCheckboxChange}
                     onHandleStatus={handleStatus}
-                    records={records}
+                    records={selectedRecords}
                   />
                 </div>
               );

@@ -1,10 +1,8 @@
-//import data from "../../../server/src/data/shifts.json";
 import { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import axios from "axios";
 import { IShift } from "../components/Shift";
 
-//TODO: add type of shift here
 export const useData = () => {
   const shiftUrl = "http://localhost:3001/shifts";
   const [mshifts, setMShifts] = useState<Array<IShift>>();

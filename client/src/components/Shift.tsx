@@ -1,6 +1,6 @@
-import { ChangeEvent, ChangeEventHandler, FC, useState } from "react";
+import { FC } from "react";
 import { DateTime } from "luxon";
-import { IRecord } from "../pages/Schedule";
+
 interface ISlot {
   start: string;
   end: string;
@@ -25,7 +25,7 @@ export interface ICheckShift {
   checked: boolean;
   onChangeCheck: (id: string) => void;
   onHandleStatus: (id: string, status: string) => void;
-  records: Array<IRecord>;
+  records: Array<string>;
 }
 
 const Colors = {
@@ -34,14 +34,12 @@ const Colors = {
 } as const;
 
 export const Shift: FC<ICheckShift> = ({ ...props }) => {
-  const record = props.records.filter((item) => item.id === props.s_id);
-
   return (
     <div className={"flex flex-row border-t-[1px] "}>
       <div className={"flex items-center pl-4"}>
         <input
           type={"checkbox"}
-          value={props.s_id}
+          checked={props.records.includes(props.s_id)}
           onChange={() => props.onChangeCheck(props.s_id)}
         />
       </div>
@@ -80,7 +78,7 @@ export const Shift: FC<ICheckShift> = ({ ...props }) => {
           >
             {props.status.charAt(0).toUpperCase() + props.status.slice(1)}
           </div>
-        ) : record[0] && record[0].status === "pending" ? (
+        ) : (
           <div className={"flex flex-row gap-x-2"}>
             <button
               className={
@@ -99,8 +97,6 @@ export const Shift: FC<ICheckShift> = ({ ...props }) => {
               Confirm
             </button>
           </div>
-        ) : (
-          "Status updated!"
         )}
       </div>
     </div>
