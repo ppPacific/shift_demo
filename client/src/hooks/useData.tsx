@@ -18,7 +18,6 @@ export const useData = () => {
         if (response && response.data && response.data.length > 0)
           setMShifts(response.data);
       } catch (e) {
-        //console.log(e);
         throw new Error("cannot load shifts!");
       }
     })();

@@ -41,6 +41,7 @@ export const Shift: FC<ICheckShift> = ({ ...props }) => {
           type={"checkbox"}
           checked={props.records.includes(props.s_id)}
           onChange={() => props.onChangeCheck(props.s_id)}
+          disabled={props.status !== "pending"}
         />
       </div>
       <div className={"flex flex-col text-xs text-black gap-y-2 p-4"}>

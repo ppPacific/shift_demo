@@ -7,12 +7,13 @@ import { SearchContext } from "../../context/searchContext";
 export const SchedulePage = () => {
   const { sortedShifts } = useData();
   const { searchTerm } = useContext(SearchContext);
-  const [stateShifts, setStateShifts] = useState<Array<IShift>>(sortedShifts);
+  const [shifts, setShifts] = useState<Array<IShift>>(sortedShifts);
   const [selectedRecords, setSelectedRecords] = useState<string[]>([]);
   const [statusUpdates, setStatusUpdates] = useState<Array<IShift>>([]);
+
   useEffect(() => {
     if (sortedShifts) {
-      setStateShifts(sortedShifts);
+      setShifts(sortedShifts);
       setStatusUpdates(sortedShifts);
     }
   }, [sortedShifts]);
@@ -26,22 +27,54 @@ export const SchedulePage = () => {
       }
     });
   };
+  const handleSelectAllChange = (currMth: Array<IShift>) => {
+    const colData = currMth?.map((item) => {
+      if (item.status === "pending") return item.s_id;
+    });
 
-  const handleStatus = (recordId: string, status: string) => {
-    setStatusUpdates((prevRecords) =>
-      prevRecords.map((record) =>
-        record.s_id === recordId && selectedRecords.includes(recordId)
-          ? { ...record, status: status }
-          : record,
-      ),
-    );
+    if (checkRemain(currMth)) {
+      setSelectedRecords((prevState) => {
+        return prevState.filter((id) => !colData.includes(id));
+      });
+    } else {
+      for (const id of colData) {
+        if (!selectedRecords.includes(id!)) {
+          handleCheckboxChange(id!);
+        }
+      }
+    }
   };
 
-  const handleConfirmAll = () => {
-    setStateShifts((prevRecords) =>
+  const handleStatus = (recordId: string, status: string) => {
+    if (selectedRecords.includes(recordId)) {
+      setStatusUpdates((prevRecords) =>
+        prevRecords.map((record) =>
+          record.s_id === recordId ? { ...record, status: status } : record,
+        ),
+      );
+    } else {
+      setShifts((prevRecords) =>
+        prevRecords.map((record) =>
+          record.s_id === recordId ? { ...record, status: status } : record,
+        ),
+      );
+      setStatusUpdates((prevRecords) =>
+        prevRecords.map((record) =>
+          record.s_id === recordId ? { ...record, status: status } : record,
+        ),
+      );
+    }
+  };
+
+  const handleConfirmAll = (currMth: Array<IShift>) => {
+    const colData = currMth?.map((item) => {
+      return item.s_id;
+    });
+    setShifts((prevRecords) =>
       prevRecords.map((record) => {
         const statusUpdate = statusUpdates.find(
-          (update) => update.s_id === record.s_id,
+          (update) =>
+            update.s_id === record.s_id && colData.includes(update.s_id),
         );
         return statusUpdate
           ? { ...record, status: statusUpdate.status }
@@ -52,7 +85,7 @@ export const SchedulePage = () => {
     setSelectedRecords([]);
   };
 
-  let groupedData = stateShifts
+  let groupedData = shifts
     .filter(
       (item) =>
         item.en_fullName
@@ -73,6 +106,11 @@ export const SchedulePage = () => {
     }, {});
 
   let sortedMonths = Object.keys(groupedData); //sort()
+  const checkRemain = (currMth: Array<IShift>) => {
+    return currMth
+      ?.filter((item) => item.status === "pending")
+      .every((item) => selectedRecords.includes(item.s_id));
+  };
 
   return (
     <div className={"pt-24 flex flex-col mobile:flex-row overflow-y-scroll"}>
@@ -95,7 +133,14 @@ export const SchedulePage = () => {
                 }
               >
                 <div className={"flex items-center pl-4 pr-2"}>
-                  <input type={"checkbox"} value={mth} onChange={() => {}} />
+                  <input
+                    type={"checkbox"}
+                    checked={checkRemain(groupedData[mth])}
+                    disabled={groupedData[mth]?.every(
+                      (item) => item.status !== "pending",
+                    )}
+                    onChange={() => handleSelectAllChange(groupedData[mth])}
+                  />
                 </div>
                 {DateTime.fromFormat(mth, "yyyy-MM").toFormat("MMMM yyyy")}
                 {groupedData && (
@@ -108,14 +153,17 @@ export const SchedulePage = () => {
                 className={
                   "px-3 h-6 rounded border border-1 border-green-500 bg-green-500 text-white flex items-center text-sm font-semibold"
                 }
-                onClick={handleConfirmAll}
+                onClick={() => handleConfirmAll(groupedData[mth])}
+                disabled={groupedData[mth]?.every(
+                  (item) => item.status !== "pending",
+                )}
               >
                 Confirm
               </button>
             </div>
             {groupedData[mth]?.map((mthItem, idx) => {
               return (
-                <div>
+                <div key={`k-${idx}-${mthItem.s_id}`}>
                   <div className={"bg-gray-100 flex items-center"}>
                     {
                       <div className={"pl-2 text-xs font-semibold"}>
@@ -127,7 +175,6 @@ export const SchedulePage = () => {
                     }
                   </div>
                   <Shift
-                    key={`k-${idx}-${mthItem.s_id}`}
                     s_id={mthItem.s_id}
                     code={mthItem.code}
                     en_fullName={mthItem.en_fullName}
